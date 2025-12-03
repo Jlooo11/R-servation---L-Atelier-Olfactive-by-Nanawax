@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation - L'Atelier Olfactive by Nanawax</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5e9d9 0%, #d7ccc8 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #3e2723;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #5d4037;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            color: #3e2723;
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #5d4037;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+        
+        .date-info {
+            background: rgba(94, 64, 55, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .date-info i {
+            margin-right: 8px;
+            color: #8d6e63;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(62, 39, 35, 0.1);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            color: #3e2723;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .form-title:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: #a1887f;
+            margin: 10px auto;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4e342e;
+            font-size: 1rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(94, 64, 55, 0.2);
+            background: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            color: #3e2723;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #8d6e63;
+            box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .radio-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .radio-option:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .radio-option.selected {
+            border-color: #8d6e63;
+            background: rgba(141, 110, 99, 0.1);
+        }
+        
+        /* Nouveau style pour les switchs de couleur comme les rouges à lèvres */
+        .color-switch-container {
+            position: relative;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .color-switch-track {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            gap: 8px;
+            padding: 10px 5px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            -ms-overflow-style: none;
+        }
+        
+        .color-switch-track::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .color-switch-option {
+            flex: 0 0 auto;
+            scroll-snap-align: center;
+            width: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px;
+            border-radius: 12px;
+        }
+        
+        .color-switch-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .color-switch-option.selected {
+            background: rgba(141, 110, 99, 0.15);
+            transform: scale(1.05);
+        }
+        
+        .color-swatch {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 8px;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .color-switch-option.selected .color-swatch {
+            border-color: #5d4037;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: scale(1.1);
+        }
+        
+        .color-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .color-switch-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5d4037;
+            font-size: 1.2rem;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .color-switch-nav:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .color-switch-nav.prev {
+            left: -18px;
+        }
+        
+        .color-switch-nav.next {
+            right: -18px;
+        }
+        
+        .color-switch-nav i {
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #8d6e63, #6d4c41);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(to right, #7a5b52, #5d4037);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(94, 64, 55, 0.2);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #5d4037;
+            font-size: 0.9rem;
+        }
+        
+        .brand {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #3e2723;
+            margin-top: 5px;
+        }
+        
+        .olfactive-decoration {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+            gap: 20px;
+        }
+        
+        .scent-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #5d4037;
+        }
+        
+        .scent-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(141, 110, 99, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        
+        /* Message de confirmation en glass morphism */
+        .confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(62, 39, 35, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .confirmation-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .confirmation-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 35px rgba(62, 39, 35, 0.2);
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            transform: translateY(30px);
+            transition: transform 0.5s ease;
+        }
+        
+        .confirmation-overlay.show .confirmation-card {
+            transform: translateY(0);
+        }
+        
+        .confirmation-icon {
+            font-size: 4rem;
+            color: #5d4037;
+            margin-bottom: 25px;
+            animation: pulse 1.5s ease infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .confirmation-title {
+            font-size: 2rem;
+            color: #3e2723;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .confirmation-text {
+            font-size: 1.1rem;
+            color: #4e342e;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .confirmation-details {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .confirmation-details p {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .confirmation-details p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            color: #5d4037;
+        }
+        
+        .detail-value {
+            color: #3e2723;
+            font-weight: 600;
+        }
+        
+        .close-confirmation {
+            background: rgba(141, 110, 99, 0.2);
+            color: #5d4037;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-confirmation:hover {
+            background: rgba(141, 110, 99, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .glass-card {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .radio-group {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+            
+            .color-switch-nav {
+                display: none;
+            }
+            
+            .confirmation-card {
+                padding: 40px 25px;
+            }
+            
+            .confirmation-icon {
+                font-size: 3.5rem;
+            }
+            
+            .confirmation-title {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-spa"></i>
+            </div>
+            <h1>L'Atelier Olfactive</h1>
+            <p class="subtitle">by Nanawax La Maison</p>
+            <div class="date-info">
+                <i class="far fa-calendar-alt"></i>
+                <span>21 décembre 2025</span>
+            </div>
+        </header>
+        
+        <div class="olfactive-decoration">
+            <div class="scent-item">
+                <div class="scent-icon">
+                    <i class="fas fa-wind"></i>
+                </div>
+                <span>Parfums</span>
+            </div>
+            <div class="scent-item">
+                <div class="scent-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <span>Essences</span>
+            </div>
+            <div class="scent-item">
+                <div class="scent-icon">
+                    <i class="fas fa-flask"></i>
+                </div>
+                <span>Créations</span>
+            </div>
+        </div>
+        
+        <div class="glass-card">
+            <h2 class="form-title">Formulaire de réservation</h2>
+            
+            <form id="reservationForm">
+                <div class="form-group">
+                    <label for="lastName">Nom *</label>
+                    <input type="text" id="lastName" required placeholder="Votre nom de famille">
+                </div>
+                
+                <div class="form-group">
+                    <label for="firstName">Prénom *</label>
+                    <input type="text" id="firstName" required placeholder="Votre prénom">
+                </div>
+                
+                <div class="form-group">
+                    <label>Taille en vêtement *</label>
+                    <div class="radio-group" id="sizeGroup">
+                        <!-- Les tailles seront générées par JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Couleur préférée *</label>
+                    <div class="color-switch-container">
+                        <button type="button" class="color-switch-nav prev">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="color-switch-track" id="colorSwitchTrack">
+                            <!-- Les switchs de couleur seront générés par JavaScript -->
+                        </div>
+                        <button type="button" class="color-switch-nav next">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-check-circle"></i> Confirmer ma réservation
+                </button>
+            </form>
+        </div>
+        
+        <footer>
+            <p>Un événement exclusif Nanawax La Maison</p>
+            <p class="brand">NANAWAX</p>
+            <p>Contact : contact@nanawax.com</p>
+        </footer>
+    </div>
+    
+    <!-- Overlay de confirmation -->
+    <div class="confirmation-overlay" id="confirmationOverlay">
+        <div class="confirmation-card">
+            <div class="confirmation-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="confirmation-title">Réservation confirmée</h2>
+            <p class="confirmation-text">Votre inscription à L'Atelier Olfactive a été enregistrée avec succès.</p>
+            
+            <div class="confirmation-details" id="confirmationDetails">
+                <!-- Les détails de réservation seront insérés ici par JavaScript -->
+            </div>
+            
+            <button class="close-confirmation" id="closeConfirmation">Fermer</button>
+        </div>
+    </div>
+
+    <script>
+        // Tailles disponibles
+        const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL'];
+        
+        // Couleurs disponibles avec leurs codes
+        const colors = [
+            { name: 'Blanc', code: '#ffffff' },
+            { name: 'Noir', code: '#000000' },
+            { name: 'Vert', code: '#4caf50' },
+            { name: 'Bleu', code: '#2196f3' },
+            { name: 'Marron', code: '#795548' },
+            { name: 'Saumon', code: '#ff8a65' },
+            { name: 'Violet', code: '#9c27b0' },
+            { name: 'Jaune', code: '#ffeb3b' }
+        ];
+        
+        // Variables pour le suivi
+        let selectedSize = '';
+        let selectedColor = '';
+        
+        // Générer les options de taille
+        const sizeGroup = document.getElementById('sizeGroup');
+        sizes.forEach(size => {
+            const sizeOption = document.createElement('div');
+            sizeOption.className = 'radio-option';
+            sizeOption.innerHTML = `<span class="size-label">${size}</span>`;
+            
+            sizeOption.addEventListener('click', () => {
+                // Désélectionner toutes les options
+                document.querySelectorAll('.radio-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                // Sélectionner cette option
+                sizeOption.classList.add('selected');
+                selectedSize = size;
+            });
+            
+            sizeGroup.appendChild(sizeOption);
+        });
+        
+        // Générer les switchs de couleur (comme les rouges à lèvres)
+        const colorSwitchTrack = document.getElementById('colorSwitchTrack');
+        colors.forEach(color => {
+            const colorOption = document.createElement('div');
+            colorOption.className = 'color-switch-option';
+            colorOption.innerHTML = `
+                <div class="color-swatch" style="background-color: ${color.code};"></div>
+                <span class="color-name">${color.name}</span>
+            `;
+            
+            colorOption.addEventListener('click', () => {
+                // Désélectionner toutes les options
+                document.querySelectorAll('.color-switch-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                // Sélectionner cette option
+                colorOption.classList.add('selected');
+                selectedColor = color.name;
+            });
+            
+            colorSwitchTrack.appendChild(colorOption);
+        });
+        
+        // Navigation pour les switchs de couleur
+        document.querySelector('.color-switch-nav.prev').addEventListener('click', () => {
+            colorSwitchTrack.scrollBy({ left: -150, behavior: 'smooth' });
+        });
+        
+        document.querySelector('.color-switch-nav.next').addEventListener('click', () => {
+            colorSwitchTrack.scrollBy({ left: 150, behavior: 'smooth' });
+        });
+        
+        // Gestion de la soumission du formulaire
+        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Récupérer les valeurs du formulaire
+            const lastName = document.getElementById('lastName').value.trim();
+            const firstName = document.getElementById('firstName').value.trim();
+            
+            // Validation
+            if (!lastName || !firstName) {
+                alert('Veuillez remplir les champs Nom et Prénom.');
+                return;
+            }
+            
+            if (!selectedSize) {
+                alert('Veuillez sélectionner une taille.');
+                return;
+            }
+            
+            if (!selectedColor) {
+                alert('Veuillez sélectionner une couleur.');
+                return;
+            }
+            
+            // Préparer les données de réservation
+            const reservationData = {
+                nom: lastName,
+                prenom: firstName,
+                taille: selectedSize,
+                couleur: selectedColor,
+                evenement: "L'Atelier Olfactive by Nanawax",
+                date: "21 décembre 2025"
+            };
+            
+            // Afficher le message de confirmation avec les détails
+            showConfirmation(reservationData);
+        });
+        
+        // Fonction pour afficher le message de confirmation
+        function showConfirmation(data) {
+            const detailsContainer = document.getElementById('confirmationDetails');
+            
+            // Générer le HTML des détails
+            detailsContainer.innerHTML = `
+                <p><span class="detail-label">Nom :</span> <span class="detail-value">${data.nom}</span></p>
+                <p><span class="detail-label">Prénom :</span> <span class="detail-value">${data.prenom}</span></p>
+                <p><span class="detail-label">Taille :</span> <span class="detail-value">${data.taille}</span></p>
+                <p><span class="detail-label">Couleur :</span> <span class="detail-value">${data.couleur}</span></p>
+                <p><span class="detail-label">Événement :</span> <span class="detail-value">${data.evenement}</span></p>
+                <p><span class="detail-label">Date :</span> <span class="detail-value">${data.date}</span></p>
+            `;
+            
+            // Afficher l'overlay de confirmation
+            const overlay = document.getElementById('confirmationOverlay');
+            overlay.classList.add('show');
+            
+            // Empêcher le défilement de la page de fond
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Fermer l'overlay de confirmation
+        document.getElementById('closeConfirmation').addEventListener('click', () => {
+            const overlay = document.getElementById('confirmationOverlay');
+            overlay.classList.remove('show');
+            
+            // Rétablir le défilement de la page
+            document.body.style.overflow = 'auto';
+            
+            // Réinitialiser le formulaire
+            document.getElementById('reservationForm').reset();
+            document.querySelectorAll('.radio-option.selected, .color-switch-option.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+            selectedSize = '';
+            selectedColor = '';
+        });
+        
+        // Fermer l'overlay en cliquant à l'extérieur
+        document.getElementById('confirmationOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('confirmationOverlay')) {
+                document.getElementById('closeConfirmation').click();
+            }
+        });
+        
+        // Sélectionner automatiquement la première option de couleur
+        window.addEventListener('load', () => {
+            // Sélectionner la première couleur par défaut
+            const firstColorOption = document.querySelector('.color-switch-option');
+            if (firstColorOption) {
+                firstColorOption.classList.add('selected');
+                selectedColor = firstColorOption.querySelector('.color-name').textContent;
+            }
+        });
+    </script>
+</body>
+</html>
