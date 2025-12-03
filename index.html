@@ -157,7 +157,6 @@
             background: rgba(141, 110, 99, 0.1);
         }
         
-        /* Nouveau style pour les switchs de couleur comme les rouges à lèvres */
         .color-switch-container {
             position: relative;
             width: 100%;
@@ -326,7 +325,6 @@
             margin-bottom: 8px;
         }
         
-        /* Message de confirmation en glass morphism */
         .confirmation-overlay {
             position: fixed;
             top: 0;
@@ -422,6 +420,35 @@
             font-weight: 600;
         }
         
+        .whatsapp-btn {
+            background: linear-gradient(to right, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .whatsapp-btn:hover {
+            background: linear-gradient(to right, #1ebe5c, #0d7d6f);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .whatsapp-btn i {
+            font-size: 1.4rem;
+        }
+        
         .close-confirmation {
             background: rgba(141, 110, 99, 0.2);
             color: #5d4037;
@@ -432,11 +459,33 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 15px;
+            width: 100%;
         }
         
         .close-confirmation:hover {
             background: rgba(141, 110, 99, 0.3);
             transform: translateY(-2px);
+        }
+        
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            color: #4e342e;
+        }
+        
+        .instructions i {
+            color: #25D366;
+            margin-right: 8px;
         }
         
         @media (max-width: 768px) {
@@ -520,6 +569,11 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="phone">Numéro de téléphone *</label>
+                    <input type="tel" id="phone" required placeholder="Ex: +33 6 12 34 56 78">
+                </div>
+                
+                <div class="form-group">
                     <label>Taille en vêtement *</label>
                     <div class="radio-group" id="sizeGroup">
                         <!-- Les tailles seront générées par JavaScript -->
@@ -539,6 +593,10 @@
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
+                </div>
+                
+                <div class="instructions">
+                    <p><i class="fab fa-whatsapp"></i> Après soumission, vous serez redirigé vers WhatsApp pour finaliser votre réservation.</p>
                 </div>
                 
                 <button type="submit" class="submit-btn">
@@ -561,13 +619,20 @@
                 <i class="fas fa-check-circle"></i>
             </div>
             <h2 class="confirmation-title">Réservation confirmée</h2>
-            <p class="confirmation-text">Votre inscription à L'Atelier Olfactive a été enregistrée avec succès.</p>
+            <p class="confirmation-text">Votre inscription a été préparée. Cliquez sur le bouton ci-dessous pour envoyer votre réservation via WhatsApp.</p>
             
             <div class="confirmation-details" id="confirmationDetails">
                 <!-- Les détails de réservation seront insérés ici par JavaScript -->
             </div>
             
-            <button class="close-confirmation" id="closeConfirmation">Fermer</button>
+            <div class="button-group">
+                <a id="whatsappLink" target="_blank" class="whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i> Envoyer via WhatsApp
+                </a>
+                <button class="close-confirmation" id="closeConfirmation">
+                    Fermer
+                </button>
+            </div>
         </div>
     </div>
 
@@ -611,7 +676,7 @@
             sizeGroup.appendChild(sizeOption);
         });
         
-        // Générer les switchs de couleur (comme les rouges à lèvres)
+        // Générer les switchs de couleur
         const colorSwitchTrack = document.getElementById('colorSwitchTrack');
         colors.forEach(color => {
             const colorOption = document.createElement('div');
@@ -650,10 +715,16 @@
             // Récupérer les valeurs du formulaire
             const lastName = document.getElementById('lastName').value.trim();
             const firstName = document.getElementById('firstName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
             
             // Validation
             if (!lastName || !firstName) {
                 alert('Veuillez remplir les champs Nom et Prénom.');
+                return;
+            }
+            
+            if (!phone) {
+                alert('Veuillez entrer votre numéro de téléphone.');
                 return;
             }
             
@@ -671,6 +742,7 @@
             const reservationData = {
                 nom: lastName,
                 prenom: firstName,
+                telephone: phone,
                 taille: selectedSize,
                 couleur: selectedColor,
                 evenement: "L'Atelier Olfactive by Nanawax",
@@ -689,11 +761,32 @@
             detailsContainer.innerHTML = `
                 <p><span class="detail-label">Nom :</span> <span class="detail-value">${data.nom}</span></p>
                 <p><span class="detail-label">Prénom :</span> <span class="detail-value">${data.prenom}</span></p>
+                <p><span class="detail-label">Téléphone :</span> <span class="detail-value">${data.telephone}</span></p>
                 <p><span class="detail-label">Taille :</span> <span class="detail-value">${data.taille}</span></p>
                 <p><span class="detail-label">Couleur :</span> <span class="detail-value">${data.couleur}</span></p>
                 <p><span class="detail-label">Événement :</span> <span class="detail-value">${data.evenement}</span></p>
                 <p><span class="detail-label">Date :</span> <span class="detail-value">${data.date}</span></p>
             `;
+            
+            // Créer le message WhatsApp
+            const whatsappMessage = `Nouvelle réservation pour L'Atelier Olfactive:%0A%0A` +
+                                  `Nom: ${data.nom}%0A` +
+                                  `Prénom: ${data.prenom}%0A` +
+                                  `Téléphone: ${data.telephone}%0A` +
+                                  `Taille: ${data.taille}%0A` +
+                                  `Couleur: ${data.couleur}%0A` +
+                                  `Événement: ${data.evenement}%0A` +
+                                  `Date: ${data.date}%0A%0A` +
+                                  `Merci de confirmer cette réservation.`;
+            
+            // REMPLACEZ CE NUMÉRO PAR VOTRE NUMÉRO WHATSAPP BUSINESS
+            const whatsappNumber = "+2250101119384"; // À CHANGER
+            
+            // Créer le lien WhatsApp
+            const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+            
+            // Mettre à jour le lien WhatsApp
+            document.getElementById('whatsappLink').href = whatsappLink;
             
             // Afficher l'overlay de confirmation
             const overlay = document.getElementById('confirmationOverlay');
@@ -734,6 +827,33 @@
             if (firstColorOption) {
                 firstColorOption.classList.add('selected');
                 selectedColor = firstColorOption.querySelector('.color-name').textContent;
+            }
+        });
+        
+        // Formatage du numéro de téléphone
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = this.value.replace(/\D/g, '');
+            
+            if (value.length > 0) {
+                if (!value.startsWith('+')) {
+                    // Ajouter l'indicatif français si non présent
+                    if (value.startsWith('0')) {
+                        value = '+225' + value.substring(1);
+                    } else if (!value.startsWith('33')) {
+                        value = '+225' + value;
+                    } else {
+                        value = '+' + value;
+                    }
+                }
+                
+                // Formater le numéro
+                let formatted = value.substring(0, 3);
+                for (let i = 3; i < value.length; i++) {
+                    if ((i - 3) % 2 === 0) formatted += ' ';
+                    formatted += value[i];
+                }
+                
+                this.value = formatted;
             }
         });
     </script>
