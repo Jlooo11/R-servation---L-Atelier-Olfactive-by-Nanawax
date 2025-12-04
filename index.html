@@ -651,43 +651,83 @@
             colorSwitchTrack.scrollBy({ left: 150, behavior: 'smooth' });
         });
         
-        // Gestion de la soumission du formulaire
-        document.getElementById('reservationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Récupérer les valeurs du formulaire
-            const lastName = document.getElementById('lastName').value.trim();
-            const firstName = document.getElementById('firstName').value.trim();
-            
-            // Validation
-            if (!lastName || !firstName) {
-                alert('Veuillez remplir les champs Nom et Prénom.');
-                return;
-            }
-            
-            if (!selectedSize) {
-                alert('Veuillez sélectionner une taille.');
-                return;
-            }
-            
-            if (!selectedColor) {
-                alert('Veuillez sélectionner une couleur.');
-                return;
-            }
-            
-            // Préparer les données de réservation
-            const reservationData = {
+        // Modifiez le gestionnaire de soumission du formulaire :
+document.getElementById('reservationForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Récupérer les valeurs du formulaire
+    const lastName = document.getElementById('lastName').value.trim();
+    const firstName = document.getElementById('firstName').value.trim();
+    const email = document.getElementById('email') ? document.getElementById('email').value.trim() : '';
+    
+    // Validation
+    if (!lastName || !firstName) {
+        alert('Veuillez remplir les champs Nom et Prénom.');
+        return;
+    }
+    
+    if (!selectedSize) {
+        alert('Veuillez sélectionner une taille.');
+        return;
+    }
+    
+    if (!selectedColor) {
+        alert('Veuillez sélectionner une couleur.');
+        return;
+    }
+    
+    // Préparer les données pour l'API
+    const reservationData = {
+        nom: lastName,
+        prenom: firstName,
+        email: email,
+        taille: selectedSize,
+        couleur: selectedColor
+    };
+    
+    try {
+        // Afficher un indicateur de chargement
+        const submitBtn = document.querySelector('.submit-btn');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+        submitBtn.disabled = true;
+        
+        // Envoyer les données au backend
+        const response = await fetch('http://localhost:3000/api/reservation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reservationData)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Afficher le message de confirmation avec les détails
+            showConfirmation({
                 nom: lastName,
                 prenom: firstName,
+                email: email,
                 taille: selectedSize,
                 couleur: selectedColor,
                 evenement: "L'Atelier Olfactive by Nanawax",
                 date: "21 décembre 2025"
-            };
-            
-            // Afficher le message de confirmation avec les détails
-            showConfirmation(reservationData);
-        });
+            });
+        } else {
+            alert('Erreur: ' + result.message);
+        }
+        
+    } catch (error) {
+        console.error('Erreur:', error);
+        alert('Une erreur est survenue lors de l\'envoi de votre réservation. Veuillez réessayer.');
+    } finally {
+        // Réinitialiser le bouton
+        const submitBtn = document.querySelector('.submit-btn');
+        submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirmer ma réservation';
+        submitBtn.disabled = false;
+    }
+});
         
         // Fonction pour afficher le message de confirmation
         function showConfirmation(data) {
