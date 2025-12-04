@@ -14,13 +14,13 @@
         }
         
         body {
-            background: linear-gradient(135deg, #f5e9d9 0%, #d7ccc8 100%);
+            background: linear-gradient(135deg, #d3b9a0 0%, #e8d5c4 100%);
             min-height: 100vh;
             padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #3e2723;
+            color: #583e30;
         }
         
         .container {
@@ -35,14 +35,24 @@
         }
         
         .logo {
-            font-size: 2.5rem;
-            color: #5d4037;
-            margin-bottom: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .logo-img {
+            width: 160px; /* Augmenté de 120px à 160px */
+            height: 160px; /* Augmenté de 120px à 160px */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            /* Insérez votre logo en remplaçant l'URL ci-dessous */
+            background-image: url('nanawax maron.png');
         }
         
         h1 {
             font-size: 2.2rem;
-            color: #3e2723;
+            color: #583e30;
             margin-bottom: 10px;
             font-weight: 300;
             letter-spacing: 1px;
@@ -50,13 +60,13 @@
         
         .subtitle {
             font-size: 1.1rem;
-            color: #5d4037;
+            color: #7a5c48;
             margin-bottom: 20px;
             letter-spacing: 0.5px;
         }
         
         .date-info {
-            background: rgba(94, 64, 55, 0.1);
+            background: rgba(88, 62, 48, 0.1);
             border-radius: 15px;
             padding: 15px;
             display: inline-block;
@@ -65,7 +75,7 @@
         
         .date-info i {
             margin-right: 8px;
-            color: #8d6e63;
+            color: #a1887f;
         }
         
         .glass-card {
@@ -74,14 +84,14 @@
             -webkit-backdrop-filter: blur(10px);
             border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(62, 39, 35, 0.1);
+            box-shadow: 0 8px 32px rgba(88, 62, 48, 0.1);
             padding: 40px;
             margin-bottom: 30px;
         }
         
         .form-title {
             font-size: 1.5rem;
-            color: #3e2723;
+            color: #583e30;
             margin-bottom: 25px;
             text-align: center;
             font-weight: 500;
@@ -93,7 +103,7 @@
             display: block;
             width: 60px;
             height: 2px;
-            background: #a1887f;
+            background: #b8a188;
             margin: 10px auto;
         }
         
@@ -105,7 +115,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #4e342e;
+            color: #583e30;
             font-size: 1rem;
         }
         
@@ -113,17 +123,17 @@
             width: 100%;
             padding: 16px 20px;
             border-radius: 12px;
-            border: 1px solid rgba(94, 64, 55, 0.2);
+            border: 1px solid rgba(88, 62, 48, 0.2);
             background: rgba(255, 255, 255, 0.7);
             font-size: 1rem;
-            color: #3e2723;
+            color: #583e30;
             transition: all 0.3s ease;
         }
         
         input:focus, select:focus {
             outline: none;
-            border-color: #8d6e63;
-            box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.2);
+            border-color: #a1887f;
+            box-shadow: 0 0 0 3px rgba(161, 136, 127, 0.2);
             background: rgba(255, 255, 255, 0.9);
         }
         
@@ -153,8 +163,8 @@
         }
         
         .radio-option.selected {
-            border-color: #8d6e63;
-            background: rgba(141, 110, 99, 0.1);
+            border-color: #a1887f;
+            background: rgba(161, 136, 127, 0.1);
         }
         
         /* Nouveau style pour les switchs de couleur comme les rouges à lèvres */
@@ -198,7 +208,7 @@
         }
         
         .color-switch-option.selected {
-            background: rgba(141, 110, 99, 0.15);
+            background: rgba(161, 136, 127, 0.15);
             transform: scale(1.05);
         }
         
@@ -213,7 +223,7 @@
         }
         
         .color-switch-option.selected .color-swatch {
-            border-color: #5d4037;
+            border-color: #583e30;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             transform: scale(1.1);
         }
@@ -237,7 +247,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            color: #5d4037;
+            color: #583e30;
             font-size: 1.2rem;
             z-index: 10;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -262,7 +272,7 @@
         }
         
         .submit-btn {
-            background: linear-gradient(to right, #8d6e63, #6d4c41);
+            background: linear-gradient(to right, #a1887f, #8d6e63);
             color: white;
             border: none;
             padding: 18px 30px;
@@ -277,9 +287,9 @@
         }
         
         .submit-btn:hover {
-            background: linear-gradient(to right, #7a5b52, #5d4037);
+            background: linear-gradient(to right, #8d6e63, #7a5b52);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(94, 64, 55, 0.2);
+            box-shadow: 0 5px 15px rgba(88, 62, 48, 0.2);
         }
         
         .submit-btn:active {
@@ -289,14 +299,13 @@
         footer {
             text-align: center;
             margin-top: 40px;
-            color: #5d4037;
-            font-size: 0.9rem;
+            color: #7a5c48;
         }
         
         .brand {
             font-weight: 600;
             font-size: 1.1rem;
-            color: #3e2723;
+            color: #583e30;
             margin-top: 5px;
         }
         
@@ -312,13 +321,13 @@
             flex-direction: column;
             align-items: center;
             font-size: 0.9rem;
-            color: #5d4037;
+            color: #7a5c48;
         }
         
         .scent-icon {
             width: 40px;
             height: 40px;
-            background: rgba(141, 110, 99, 0.2);
+            background: rgba(161, 136, 127, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -333,7 +342,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(62, 39, 35, 0.7);
+            background: rgba(88, 62, 48, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -354,7 +363,7 @@
             -webkit-backdrop-filter: blur(20px);
             border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 15px 35px rgba(62, 39, 35, 0.2);
+            box-shadow: 0 15px 35px rgba(88, 62, 48, 0.2);
             padding: 50px 40px;
             text-align: center;
             max-width: 450px;
@@ -369,7 +378,7 @@
         
         .confirmation-icon {
             font-size: 4rem;
-            color: #5d4037;
+            color: #583e30;
             margin-bottom: 25px;
             animation: pulse 1.5s ease infinite;
         }
@@ -382,14 +391,14 @@
         
         .confirmation-title {
             font-size: 2rem;
-            color: #3e2723;
+            color: #583e30;
             margin-bottom: 15px;
             font-weight: 500;
         }
         
         .confirmation-text {
             font-size: 1.1rem;
-            color: #4e342e;
+            color: #583e30;
             margin-bottom: 30px;
             line-height: 1.5;
         }
@@ -414,17 +423,17 @@
         
         .detail-label {
             font-weight: 500;
-            color: #5d4037;
+            color: #7a5c48;
         }
         
         .detail-value {
-            color: #3e2723;
+            color: #583e30;
             font-weight: 600;
         }
         
         .close-confirmation {
-            background: rgba(141, 110, 99, 0.2);
-            color: #5d4037;
+            background: rgba(161, 136, 127, 0.2);
+            color: #583e30;
             border: none;
             padding: 14px 30px;
             border-radius: 12px;
@@ -435,7 +444,7 @@
         }
         
         .close-confirmation:hover {
-            background: rgba(141, 110, 99, 0.3);
+            background: rgba(161, 136, 127, 0.3);
             transform: translateY(-2px);
         }
         
@@ -467,6 +476,7 @@
             .confirmation-title {
                 font-size: 1.7rem;
             }
+            
         }
     </style>
 </head>
@@ -474,7 +484,7 @@
     <div class="container">
         <header>
             <div class="logo">
-                <i class="fas fa-spa"></i>
+                <div class="logo-img"></div>
             </div>
             <h1>L'Atelier Olfactive</h1>
             <p class="subtitle">by Nanawax La Maison</p>
@@ -549,7 +559,6 @@
         
         <footer>
             <p>Un événement exclusif Nanawax La Maison</p>
-            <p class="brand">NANAWAX</p>
         </footer>
     </div>
     
