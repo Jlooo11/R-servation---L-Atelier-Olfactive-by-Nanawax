@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Réservation - L'Atelier Olfactive by Nanawax</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Ajout de EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -166,7 +168,6 @@
             background: rgba(161, 136, 127, 0.1);
         }
         
-        /* Style pour les options de couleur (similaire aux tailles) */
         .color-options-container {
             margin-top: 10px;
         }
@@ -278,7 +279,6 @@
             margin-bottom: 8px;
         }
         
-        /* Message de confirmation en glass morphism */
         .confirmation-overlay {
             position: fixed;
             top: 0;
@@ -417,6 +417,25 @@
                 font-size: 1.7rem;
             }
         }
+        
+        .alert {
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert.error {
+            background-color: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #d32f2f;
+        }
+        
+        .alert.success {
+            background-color: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #388e3c;
+        }
     </style>
 </head>
 <body>
@@ -513,194 +532,103 @@
     </div>
 
     <script>
-        // Tailles disponibles
-        const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL'];
-        
-        // Couleurs disponibles (noms uniquement)
-        const colors = ['Blanc', 'Noir', 'Vert', 'Bleu', 'Marron', 'Saumon', 'Violet', 'Jaune'];
-        
-        // Variables pour le suivi
-        let selectedSize = '';
-        let selectedColor = '';
-        
-        // Générer les options de taille
-        const sizeGroup = document.getElementById('sizeGroup');
-        sizes.forEach(size => {
-            const sizeOption = document.createElement('div');
-            sizeOption.className = 'radio-option';
-            sizeOption.innerHTML = `<span class="size-label">${size}</span>`;
-            
-            sizeOption.addEventListener('click', () => {
-                // Désélectionner toutes les options
-                document.querySelectorAll('.radio-option').forEach(option => {
-                    option.classList.remove('selected');
-                });
-                // Sélectionner cette option
-                sizeOption.classList.add('selected');
-                selectedSize = size;
-            });
-            
-            sizeGroup.appendChild(sizeOption);
-        });
-        
-        // Générer les options de couleur (similaires aux tailles)
-        const colorOptionsGroup = document.getElementById('colorOptionsGroup');
-        colors.forEach(color => {
-            const colorOption = document.createElement('div');
-            colorOption.className = 'color-option';
-            colorOption.innerHTML = `
-                <div class="color-icon">
-                    <i class="fas fa-palette"></i>
-                </div>
-                <span class="color-name">${color}</span>
-            `;
-            
-            colorOption.addEventListener('click', () => {
-                // Désélectionner toutes les options
-                document.querySelectorAll('.color-option').forEach(option => {
-                    option.classList.remove('selected');
-                });
-                // Sélectionner cette option
-                colorOption.classList.add('selected');
-                selectedColor = color;
-            });
-            
-            colorOptionsGroup.appendChild(colorOption);
-        });
-        
-        // Gestionnaire de soumission du formulaire
-        document.getElementById('reservationForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Récupérer les valeurs du formulaire
-            const lastName = document.getElementById('lastName').value.trim();
-            const firstName = document.getElementById('firstName').value.trim();
-            const email = document.getElementById('email') ? document.getElementById('email').value.trim() : '';
-            
-            // Validation
-            if (!lastName || !firstName) {
-                alert('Veuillez remplir les champs Nom et Prénom.');
-                return;
-            }
-            
-            if (!selectedSize) {
-                alert('Veuillez sélectionner une taille.');
-                return;
-            }
-            
-            if (!selectedColor) {
-                alert('Veuillez sélectionner une couleur.');
-                return;
-            }
-            
-            // Préparer les données pour l'API
-            const reservationData = {
-                nom: lastName,
-                prenom: firstName,
-                email: email,
-                taille: selectedSize,
-                couleur: selectedColor
-            };
-            
-            try {
-                // Afficher un indicateur de chargement
-                const submitBtn = document.querySelector('.submit-btn');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
-                submitBtn.disabled = true;
-                
-                // Envoyer les données au backend
-                const response = await fetch('https://r-servation-l-atelier-olfactive-by.onrender.com/api/reservation', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reservationData)
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    // Afficher le message de confirmation avec les détails
-                    showConfirmation({
-                        nom: lastName,
-                        prenom: firstName,
-                        email: email,
-                        taille: selectedSize,
-                        couleur: selectedColor,
-                        evenement: "L'Atelier Olfactive by Nanawax",
-                        date: "21 décembre 2025"
-                    });
-                } else {
-                    alert('Erreur: ' + result.message);
-                }
-                
-            } catch (error) {
-                console.error('Erreur:', error);
-                alert('Une erreur est survenue lors de l\'envoi de votre réservation. Veuillez réessayer.');
-            } finally {
-                // Réinitialiser le bouton
-                const submitBtn = document.querySelector('.submit-btn');
-                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Confirmer ma réservation';
-                submitBtn.disabled = false;
-            }
-        });
-        
-        // Fonction pour afficher le message de confirmation
-        function showConfirmation(data) {
-            const detailsContainer = document.getElementById('confirmationDetails');
-            
-            // Générer le HTML des détails
-            detailsContainer.innerHTML = `
-                <p><span class="detail-label">Nom :</span> <span class="detail-value">${data.nom}</span></p>
-                <p><span class="detail-label">Prénom :</span> <span class="detail-value">${data.prenom}</span></p>
-                <p><span class="detail-label">Taille :</span> <span class="detail-value">${data.taille}</span></p>
-                <p><span class="detail-label">Couleur :</span> <span class="detail-value">${data.couleur}</span></p>
-                <p><span class="detail-label">Événement :</span> <span class="detail-value">${data.evenement}</span></p>
-                <p><span class="detail-label">Date :</span> <span class="detail-value">${data.date}</span></p>
-            `;
-            
-            // Afficher l'overlay de confirmation
-            const overlay = document.getElementById('confirmationOverlay');
-            overlay.classList.add('show');
-            
-            // Empêcher le défilement de la page de fond
-            document.body.style.overflow = 'hidden';
-        }
-        
-        // Fermer l'overlay de confirmation
-        document.getElementById('closeConfirmation').addEventListener('click', () => {
-            const overlay = document.getElementById('confirmationOverlay');
-            overlay.classList.remove('show');
-            
-            // Rétablir le défilement de la page
-            document.body.style.overflow = 'auto';
-            
-            // Réinitialiser le formulaire
-            document.getElementById('reservationForm').reset();
-            document.querySelectorAll('.radio-option.selected, .color-option.selected').forEach(el => {
-                el.classList.remove('selected');
-            });
-            selectedSize = '';
-            selectedColor = '';
-        });
-        
-        // Fermer l'overlay en cliquant à l'extérieur
-        document.getElementById('confirmationOverlay').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('confirmationOverlay')) {
-                document.getElementById('closeConfirmation').click();
-            }
-        });
-        
-        // Sélectionner automatiquement la première option de couleur
-        window.addEventListener('load', () => {
-            // Sélectionner la première couleur par défaut
-            const firstColorOption = document.querySelector('.color-option');
-            if (firstColorOption) {
-                firstColorOption.classList.add('selected');
-                selectedColor = firstColorOption.querySelector('.color-name').textContent;
-            }
-        });
-    </script>
+  (function () {
+    emailjs.init("13uhnx4ywp64w0KDy"); // ✅ Public Key OK
+  })();
+
+  const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL'];
+  const colors = ['Blanc', 'Noir', 'Vert', 'Bleu', 'Marron', 'Saumon', 'Violet', 'Jaune'];
+
+  let selectedSize = '';
+  let selectedColor = '';
+
+  // Génération tailles
+  const sizeGroup = document.getElementById('sizeGroup');
+  sizes.forEach(size => {
+    const div = document.createElement('div');
+    div.className = 'radio-option';
+    div.innerHTML = `<span>${size}</span>`;
+    div.onclick = () => {
+      document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+      div.classList.add('selected');
+      selectedSize = size;
+    };
+    sizeGroup.appendChild(div);
+  });
+
+  // Génération couleurs
+  const colorGroup = document.getElementById('colorOptionsGroup');
+  colors.forEach(color => {
+    const div = document.createElement('div');
+    div.className = 'color-option';
+    div.innerHTML = `<i class="fas fa-palette"></i><span>${color}</span>`;
+    div.onclick = () => {
+      document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+      div.classList.add('selected');
+      selectedColor = color;
+    };
+    colorGroup.appendChild(div);
+  });
+
+  document.getElementById('reservationForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const nom = document.getElementById('lastName').value.trim();
+    const prenom = document.getElementById('firstName').value.trim();
+
+    if (!nom || !prenom || !selectedSize || !selectedColor) {
+      alert("Veuillez remplir tous les champs.");
+      return;
+    }
+
+    const btn = document.querySelector('.submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = "Envoi en cours…";
+
+    emailjs.send(
+      "service_1socitl",
+      "template_jtmxw1q",
+      {
+        nom,
+        prenom,
+        taille: selectedSize,
+        couleur: selectedColor,
+        evenement: "L'Atelier Olfactive by Nanawax",
+        date: "21 décembre 2025"
+      }
+    )
+    .then(() => {
+      showConfirmation({ nom, prenom, taille: selectedSize, couleur: selectedColor });
+      btn.disabled = false;
+      btn.innerHTML = "Confirmer ma réservation";
+    })
+    .catch(() => {
+      alert("Erreur lors de l’envoi");
+      btn.disabled = false;
+      btn.innerHTML = "Confirmer ma réservation";
+    });
+  });
+
+  function showConfirmation(data) {
+    document.getElementById('confirmationDetails').innerHTML = `
+      <p><strong>Nom :</strong> ${data.nom}</p>
+      <p><strong>Prénom :</strong> ${data.prenom}</p>
+      <p><strong>Taille :</strong> ${data.taille}</p>
+      <p><strong>Couleur :</strong> ${data.couleur}</p>
+    `;
+    document.getElementById('confirmationOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.getElementById('closeConfirmation').onclick = () => {
+    document.getElementById('confirmationOverlay').classList.remove('show');
+    document.body.style.overflow = 'auto';
+    document.getElementById('reservationForm').reset();
+    selectedSize = '';
+    selectedColor = '';
+    document.querySelectorAll('.selected').forEach(e => e.classList.remove('selected'));
+  };
+</script>
+
 </body>
 </html>
