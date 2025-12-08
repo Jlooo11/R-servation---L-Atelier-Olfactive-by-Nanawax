@@ -1,633 +1,277 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réservation - L'Atelier Olfactive by Nanawax</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Ajout de EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #d3b9a0 0%, #e8d5c4 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #583e30;
-        }
-        
-        .container {
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .logo {
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .logo-img {
-            width: 160px;
-            height: 160px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-image: url('nanawax maron.png');
-        }
-        
-        h1 {
-            font-size: 2.2rem;
-            color: #583e30;
-            margin-bottom: 10px;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-        
-        .subtitle {
-            font-size: 1.1rem;
-            color: #7a5c48;
-            margin-bottom: 20px;
-            letter-spacing: 0.5px;
-        }
-        
-        .date-info {
-            background: rgba(88, 62, 48, 0.1);
-            border-radius: 15px;
-            padding: 15px;
-            display: inline-block;
-            margin-top: 10px;
-        }
-        
-        .date-info i {
-            margin-right: 8px;
-            color: #a1887f;
-        }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(88, 62, 48, 0.1);
-            padding: 40px;
-            margin-bottom: 30px;
-        }
-        
-        .form-title {
-            font-size: 1.5rem;
-            color: #583e30;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 500;
-            position: relative;
-        }
-        
-        .form-title:after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 2px;
-            background: #b8a188;
-            margin: 10px auto;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #583e30;
-            font-size: 1rem;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 16px 20px;
-            border-radius: 12px;
-            border: 1px solid rgba(88, 62, 48, 0.2);
-            background: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
-            color: #583e30;
-            transition: all 0.3s ease;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #a1887f;
-            box-shadow: 0 0 0 3px rgba(161, 136, 127, 0.2);
-            background: rgba(255, 255, 255, 0.9);
-        }
-        
-        .radio-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 12px;
-            margin-top: 10px;
-        }
-        
-        .radio-option {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 12px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.5);
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .radio-option:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: translateY(-2px);
-        }
-        
-        .radio-option.selected {
-            border-color: #a1887f;
-            background: rgba(161, 136, 127, 0.1);
-        }
-        
-        .color-options-container {
-            margin-top: 10px;
-        }
-        
-        .color-options-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 12px;
-        }
-        
-        .color-option {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 16px 12px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.5);
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-        
-        .color-option:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: translateY(-2px);
-        }
-        
-        .color-option.selected {
-            border-color: #a1887f;
-            background: rgba(161, 136, 127, 0.1);
-            box-shadow: 0 4px 12px rgba(88, 62, 48, 0.15);
-        }
-        
-        .color-name {
-            font-weight: 500;
-            color: #583e30;
-            font-size: 0.95rem;
-        }
-        
-        .color-icon {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-            color: #583e30;
-        }
-        
-        .submit-btn {
-            background: linear-gradient(to right, #a1887f, #8d6e63);
-            color: white;
-            border: none;
-            padding: 18px 30px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-            letter-spacing: 1px;
-            margin-top: 10px;
-        }
-        
-        .submit-btn:hover {
-            background: linear-gradient(to right, #8d6e63, #7a5b52);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(88, 62, 48, 0.2);
-        }
-        
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-        
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #7a5c48;
-        }
-        
-        .brand {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #583e30;
-            margin-top: 5px;
-        }
-        
-        .olfactive-decoration {
-            display: flex;
-            justify-content: center;
-            margin: 25px 0;
-            gap: 20px;
-        }
-        
-        .scent-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.9rem;
-            color: #7a5c48;
-        }
-        
-        .scent-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(161, 136, 127, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
-        }
-        
-        .confirmation-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(88, 62, 48, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-        }
-        
-        .confirmation-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .confirmation-card {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 15px 35px rgba(88, 62, 48, 0.2);
-            padding: 50px 40px;
-            text-align: center;
-            max-width: 450px;
-            width: 90%;
-            transform: translateY(30px);
-            transition: transform 0.5s ease;
-        }
-        
-        .confirmation-overlay.show .confirmation-card {
-            transform: translateY(0);
-        }
-        
-        .confirmation-icon {
-            font-size: 4rem;
-            color: #583e30;
-            margin-bottom: 25px;
-            animation: pulse 1.5s ease infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        .confirmation-title {
-            font-size: 2rem;
-            color: #583e30;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-        
-        .confirmation-text {
-            font-size: 1.1rem;
-            color: #583e30;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-        
-        .confirmation-details {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 30px;
-            text-align: left;
-        }
-        
-        .confirmation-details p {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .confirmation-details p:last-child {
-            margin-bottom: 0;
-        }
-        
-        .detail-label {
-            font-weight: 500;
-            color: #7a5c48;
-        }
-        
-        .detail-value {
-            color: #583e30;
-            font-weight: 600;
-        }
-        
-        .close-confirmation {
-            background: rgba(161, 136, 127, 0.2);
-            color: #583e30;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .close-confirmation:hover {
-            background: rgba(161, 136, 127, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        @media (max-width: 768px) {
-            .glass-card {
-                padding: 30px 20px;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .radio-group,
-            .color-options-group {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            }
-            
-            .confirmation-card {
-                padding: 40px 25px;
-            }
-            
-            .confirmation-icon {
-                font-size: 3.5rem;
-            }
-            
-            .confirmation-title {
-                font-size: 1.7rem;
-            }
-        }
-        
-        .alert {
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        
-        .alert.error {
-            background-color: rgba(244, 67, 54, 0.1);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-            color: #d32f2f;
-        }
-        
-        .alert.success {
-            background-color: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-            color: #388e3c;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <div class="logo-img"></div>
-            </div>
-            <h1>L'Atelier Olfactive</h1>
-            <p class="subtitle">by Nanawax La Maison</p>
-            <div class="date-info">
-                <i class="far fa-calendar-alt"></i>
-                <span>21 décembre 2025</span>
-            </div>
-        </header>
-        
-        <div class="olfactive-decoration">
-            <div class="scent-item">
-                <div class="scent-icon">
-                    <i class="fas fa-wind"></i>
-                </div>
-                <span>Parfums</span>
-            </div>
-            <div class="scent-item">
-                <div class="scent-icon">
-                    <i class="fas fa-seedling"></i>
-                </div>
-                <span>Essences</span>
-            </div>
-            <div class="scent-item">
-                <div class="scent-icon">
-                    <i class="fas fa-flask"></i>
-                </div>
-                <span>Créations</span>
-            </div>
-        </div>
-        
-        <div class="glass-card">
-            <h2 class="form-title">Formulaire de réservation</h2>
-            
-            <form id="reservationForm">
-                <div class="form-group">
-                    <label for="lastName">Nom *</label>
-                    <input type="text" id="lastName" required placeholder="Votre nom de famille">
-                </div>
-                
-                <div class="form-group">
-                    <label for="firstName">Prénom *</label>
-                    <input type="text" id="firstName" required placeholder="Votre prénom">
-                </div>
-                
-                <div class="form-group">
-                    <label>Taille en vêtement *</label>
-                    <div class="radio-group" id="sizeGroup">
-                        <!-- Les tailles seront générées par JavaScript -->
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Couleur préférée *</label>
-                    <div class="color-options-container">
-                        <div class="color-options-group" id="colorOptionsGroup">
-                            <!-- Les options de couleur seront générées par JavaScript -->
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-check-circle"></i> Confirmer ma réservation
-                </button>
-            </form>
-        </div>
-        
-        <footer>
-            <p>Un événement exclusif Nanawax La Maison</p>
-        </footer>
-    </div>
-    
-    <!-- Overlay de confirmation -->
-    <div class="confirmation-overlay" id="confirmationOverlay">
-        <div class="confirmation-card">
-            <div class="confirmation-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h2 class="confirmation-title">Réservation confirmée</h2>
-            <p class="confirmation-text">Votre inscription à L'Atelier Olfactive a été enregistrée avec succès.</p>
-            
-            <div class="confirmation-details" id="confirmationDetails">
-                <!-- Les détails de réservation seront insérés ici par JavaScript -->
-            </div>
-            
-            <button class="close-confirmation" id="closeConfirmation">Fermer</button>
-        </div>
-    </div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Réservation - L'Atelier Olfactive by Nanawax</title>
 
-    <script>
-  (function () {
-    emailjs.init("13uhnx4ywp64w0KDy"); // ✅ Public Key OK
-  })();
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
-  const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL'];
-  const colors = ['Blanc', 'Noir', 'Vert', 'Bleu', 'Marron', 'Saumon', 'Violet', 'Jaune'];
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+    body{
+      background:linear-gradient(135deg,#d3b9a0,#e8d5c4);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#583e30;
+      padding:20px
+    }
+    .container{max-width:800px;width:100%}
+    header{text-align:center;margin-bottom:35px}
+    .logo-img{
+      width:150px;height:150px;
+      background:url('nanawax maron.png') center/contain no-repeat;
+      margin:auto
+    }
+    h1{font-weight:300;font-size:2.2rem;margin-top:10px}
+    .subtitle{color:#7a5c48;margin-bottom:15px}
+    .date-info{
+      background:rgba(88,62,48,.1);
+      border-radius:14px;
+      padding:12px 18px;
+      margin:6px auto;
+      width:max-content
+    }
+    .glass-card{
+      background:rgba(255,255,255,.25);
+      backdrop-filter:blur(10px);
+      border-radius:24px;
+      padding:35px;
+      box-shadow:0 8px 30px rgba(0,0,0,.08)
+    }
+    .form-title{text-align:center;font-size:1.5rem;margin-bottom:25px}
+    .form-group{margin-bottom:22px}
 
-  let selectedSize = '';
-  let selectedColor = '';
-
-  // Génération tailles
-  const sizeGroup = document.getElementById('sizeGroup');
-  sizes.forEach(size => {
-    const div = document.createElement('div');
-    div.className = 'radio-option';
-    div.innerHTML = `<span>${size}</span>`;
-    div.onclick = () => {
-      document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
-      div.classList.add('selected');
-      selectedSize = size;
-    };
-    sizeGroup.appendChild(div);
-  });
-
-  // Génération couleurs
-  const colorGroup = document.getElementById('colorOptionsGroup');
-  colors.forEach(color => {
-    const div = document.createElement('div');
-    div.className = 'color-option';
-    div.innerHTML = `<i class="fas fa-palette"></i><span>${color}</span>`;
-    div.onclick = () => {
-      document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
-      div.classList.add('selected');
-      selectedColor = color;
-    };
-    colorGroup.appendChild(div);
-  });
-
-  document.getElementById('reservationForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const nom = document.getElementById('lastName').value.trim();
-    const prenom = document.getElementById('firstName').value.trim();
-
-    if (!nom || !prenom || !selectedSize || !selectedColor) {
-      alert("Veuillez remplir tous les champs.");
-      return;
+    label{display:block;margin-bottom:6px;font-weight:500}
+    input,select{
+      width:100%;
+      padding:14px 16px;
+      border-radius:12px;
+      border:1px solid rgba(0,0,0,.15);
+      background:rgba(255,255,255,.8)
     }
 
-    const btn = document.querySelector('.submit-btn');
-    btn.disabled = true;
-    btn.innerHTML = "Envoi en cours…";
+    .phone-row{display:flex;gap:10px}
+    .phone-row select{max-width:110px}
 
-    emailjs.send(
-      "service_1socitl",
-      "template_jtmxw1q",
-      {
-        nom,
-        prenom,
-        taille: selectedSize,
-        couleur: selectedColor,
-        evenement: "L'Atelier Olfactive by Nanawax",
-        date: "21 décembre 2025"
-      }
-    )
-    .then(() => {
-      showConfirmation({ nom, prenom, taille: selectedSize, couleur: selectedColor });
-      btn.disabled = false;
-      btn.innerHTML = "Confirmer ma réservation";
-    })
-    .catch(() => {
-      alert("Erreur lors de l’envoi");
-      btn.disabled = false;
-      btn.innerHTML = "Confirmer ma réservation";
-    });
-  });
+    .radio-group,.color-options-group{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+      gap:10px;
+      margin-top:8px
+    }
+    .radio-option,.color-option{
+      padding:14px;
+      border-radius:12px;
+      background:rgba(255,255,255,.6);
+      cursor:pointer;
+      text-align:center
+    }
+    .radio-option.selected,.color-option.selected{
+      border:2px solid #a1887f;
+      background:rgba(161,136,127,.15)
+    }
 
-  function showConfirmation(data) {
-    document.getElementById('confirmationDetails').innerHTML = `
-      <p><strong>Nom :</strong> ${data.nom}</p>
-      <p><strong>Prénom :</strong> ${data.prenom}</p>
-      <p><strong>Taille :</strong> ${data.taille}</p>
-      <p><strong>Couleur :</strong> ${data.couleur}</p>
-    `;
-    document.getElementById('confirmationOverlay').classList.add('show');
-    document.body.style.overflow = 'hidden';
+    .submit-btn{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:14px;
+      background:linear-gradient(to right,#a1887f,#8d6e63);
+      color:white;
+      font-size:1.1rem;
+      font-weight:600;
+      cursor:pointer
+    }
+
+    footer{text-align:center;margin-top:30px;color:#7a5c48}
+
+    /* Confirmation */
+    .confirmation-overlay{
+      position:fixed;inset:0;background:rgba(88,62,48,.7);
+      display:none;align-items:center;justify-content:center
+    }
+    .confirmation-overlay.show{display:flex}
+    .confirmation-card{
+      background:white;
+      padding:35px;
+      border-radius:20px;
+      max-width:420px;
+      width:90%;
+      text-align:center
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <div class="logo-img"></div>
+  <h1>L'Atelier Olfactive</h1>
+  <p class="subtitle">by Nanawax La Maison</p>
+
+  <div class="date-info">
+    <i class="far fa-calendar"></i> 21 décembre 2025
+  </div>
+  <div class="date-info">
+    <i class="fas fa-location-dot"></i> Nanawax La Maison
+  </div>
+</header>
+
+<div class="glass-card">
+  <h2 class="form-title">Formulaire de réservation</h2>
+
+  <form id="reservationForm">
+
+    <div class="form-group">
+      <label>Nom *</label>
+      <input id="lastName" required>
+    </div>
+
+    <div class="form-group">
+      <label>Prénom *</label>
+      <input id="firstName" required>
+    </div>
+
+    <!-- Téléphone -->
+    <div class="form-group">
+      <label>Numéro de téléphone *</label>
+      <div class="phone-row">
+        <select id="countryCode" required>
+  <option value="">Indicatif</option>
+  <!-- Afrique -->
+  <option value="+225">🇨🇮 Côte d’Ivoire +225</option>
+  <option value="+221">🇸🇳 Sénégal +221</option>
+  <option value="+223">🇲🇱 Mali +223</option>
+  <option value="+226">🇧🇫 Burkina Faso +226</option>
+  <option value="+229">🇧🇯 Bénin +229</option>
+  <option value="+228">🇹🇬 Togo +228</option>
+  <option value="+227">🇳🇪 Niger +227</option>
+  <option value="+234">🇳🇬 Nigeria +234</option>
+  <option value="+233">🇬🇭 Ghana +233</option>
+  <option value="+237">🇨🇲 Cameroun +237</option>
+  <option value="+243">🇨🇩 RD Congo +243</option>
+  <option value="+212">🇲🇦 Maroc +212</option>
+  <option value="+213">🇩🇿 Algérie +213</option>
+  <option value="+216">🇹🇳 Tunisie +216</option>
+
+  <!-- Europe -->
+  <option value="+33">🇫🇷 France +33</option>
+  <option value="+32">🇧🇪 Belgique +32</option>
+  <option value="+41">🇨🇭 Suisse +41</option>
+  <option value="+49">🇩🇪 Allemagne +49</option>
+  <option value="+39">🇮🇹 Italie +39</option>
+  <option value="+34">🇪🇸 Espagne +34</option>
+  <option value="+44">🇬🇧 Royaume-Uni +44</option>
+  <option value="+351">🇵🇹 Portugal +351</option>
+  <option value="+31">🇳🇱 Pays-Bas +31</option>
+
+  <!-- Amériques -->
+  <option value="+1">🇺🇸 États-Unis / Canada +1</option>
+  <option value="+1">🇨🇦 Canada +1</option>
+  <option value="+52">🇲🇽 Mexique +52</option>
+  <option value="+55">🇧🇷 Brésil +55</option>
+
+  <!-- Moyen-Orient -->
+  <option value="+971">🇦🇪 Émirats Arabes Unis +971</option>
+  <option value="+966">🇸🇦 Arabie Saoudite +966</option>
+  <option value="+974">🇶🇦 Qatar +974</option>
+
+  <!-- Autres -->
+  <option value="+86">🇨🇳 Chine +86</option>
+  <option value="+81">🇯🇵 Japon +81</option>
+  <option value="+91">🇮🇳 Inde +91</option>
+  <option value="+61">🇦🇺 Australie +61</option>
+</select>
+        <input id="phone" placeholder="Numéro" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Taille *</label>
+      <div class="radio-group" id="sizeGroup"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Couleur préférée *</label>
+      <div class="color-options-group" id="colorOptionsGroup"></div>
+    </div>
+
+    <button class="submit-btn">Confirmer ma réservation</button>
+  </form>
+</div>
+
+<footer>Un événement exclusif Nanawax La Maison</footer>
+</div>
+
+<!-- Confirmation -->
+<div class="confirmation-overlay" id="confirmationOverlay">
+  <div class="confirmation-card">
+    <h2>✅ Réservation confirmée</h2>
+    <div id="confirmationDetails"></div><br>
+    <button onclick="closeConfirm()">Fermer</button>
+  </div>
+</div>
+
+<script>
+emailjs.init("13uhnx4ywp64w0KDy");
+
+const sizes=['XS','S','M','L','XL','2XL','3XL','4XL'];
+const colors=['Blanc','Noir','Vert','Bleu','Marron','Saumon','Violet','Jaune'];
+
+let selectedSize='', selectedColor='';
+
+sizes.forEach(s=>{
+  let d=document.createElement('div');
+  d.className='radio-option'; d.textContent=s;
+  d.onclick=()=>{document.querySelectorAll('.radio-option').forEach(x=>x.classList.remove('selected'));d.classList.add('selected');selectedSize=s;}
+  sizeGroup.appendChild(d);
+});
+
+colors.forEach(c=>{
+  let d=document.createElement('div');
+  d.className='color-option'; d.textContent=c;
+  d.onclick=()=>{document.querySelectorAll('.color-option').forEach(x=>x.classList.remove('selected'));d.classList.add('selected');selectedColor=c;}
+  colorOptionsGroup.appendChild(d);
+});
+
+reservationForm.onsubmit=e=>{
+  e.preventDefault();
+
+  const nom=lastName.value.trim();
+  const prenom=firstName.value.trim();
+  const tel=countryCode.value+" "+phone.value.trim();
+
+  if(!nom||!prenom||!tel||!selectedSize||!selectedColor){
+    alert("Veuillez remplir tous les champs");
+    return;
   }
 
-  document.getElementById('closeConfirmation').onclick = () => {
-    document.getElementById('confirmationOverlay').classList.remove('show');
-    document.body.style.overflow = 'auto';
-    document.getElementById('reservationForm').reset();
-    selectedSize = '';
-    selectedColor = '';
-    document.querySelectorAll('.selected').forEach(e => e.classList.remove('selected'));
-  };
+  emailjs.send("service_1socitl","template_jtmxw1q",{
+    nom,prenom,telephone:tel,taille:selectedSize,couleur:selectedColor,
+    evenement:"L'Atelier Olfactive by Nanawax",
+    date:"21 décembre 2025",
+    lieu:"Nanawax La Maison"
+  }).then(()=>{
+    confirmationDetails.innerHTML=`
+      <p><b>Nom :</b> ${nom}</p>
+      <p><b>Prénom :</b> ${prenom}</p>
+      <p><b>Téléphone :</b> ${tel}</p>
+      <p><b>Taille :</b> ${selectedSize}</p>
+      <p><b>Couleur :</b> ${selectedColor}</p>`;
+    confirmationOverlay.classList.add('show');
+  });
+};
+
+function closeConfirm(){
+  confirmationOverlay.classList.remove('show');
+  reservationForm.reset();
+  selectedSize=selectedColor='';
+}
 </script>
 
 </body>
