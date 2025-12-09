@@ -140,6 +140,11 @@
       <input id="firstName" required>
     </div>
 
+    <div class="form-group">
+  <label>Email *</label>
+  <input type="email" id="email" placeholder="ex: nom@email.com" required>
+    </div>
+
     <!-- Téléphone -->
     <div class="form-group">
       <label>Numéro de téléphone *</label>
@@ -247,6 +252,7 @@ reservationForm.onsubmit=e=>{
 
   const nom=lastName.value.trim();
   const prenom=firstName.value.trim();
+  const email = document.getElementById("email").value.trim();
   const tel=countryCode.value+" "+phone.value.trim();
 
   if(!nom||!prenom||!tel||!selectedSize||!selectedColor){
@@ -254,19 +260,54 @@ reservationForm.onsubmit=e=>{
     return;
   }
 
-  emailjs.send("service_1socitl","template_jtmxw1q",{
-    nom,prenom,telephone:tel,taille:selectedSize,couleur:selectedColor,
-    evenement:"L'Atelier Olfactive by Nanawax",
-    date:"21 décembre 2025",
-    lieu:"Nanawax La Maison"
-  }).then(()=>{
-    confirmationDetails.innerHTML=`
-      <p><b>Nom :</b> ${nom}</p>
-      <p><b>Prénom :</b> ${prenom}</p>
-      <p><b>Téléphone :</b> ${tel}</p>
-      <p><b>Taille :</b> ${selectedSize}</p>
-      <p><b>Couleur :</b> ${selectedColor}</p>`;
-    confirmationOverlay.classList.add('show');
+  // 1️⃣ Email pour toi (admin)
+emailjs.send("service_1socitl","template_jtmxw1q",{
+  nom,
+  prenom,
+  email,
+  telephone: tel,
+  taille: selectedSize,
+  couleur: selectedColor,
+  evenement: "L'Atelier Olfactive by Nanawax",
+  date: "21 décembre 2025",
+  lieu: "Nanawax La Maison"
+})
+
+// 2️⃣ Email de confirmation pour le client
+.then(() => {
+  return emailjs.send("service_1socitl","template_to7qggt",{
+    prenom,
+    email,
+    evenement: "L'Atelier Olfactive by Nanawax",
+    date: "21 décembre 2025",
+    horaire: "17h30 – 21h",
+    lieu: "Nanawax La Maison"
+  });
+})
+
+// ✅ Affichage confirmation
+.then(() => {
+  confirmationOverlay.classList.add('show');
+})
+
+// ❌ En cas d’erreur
+.catch(err => {
+  alert("Une erreur est survenue lors de l'envoi des emails.");
+  console.error(err);
+}).then(()=>{
+    confirmationDetails.innerHTML = `
+  <p><b>Nom :</b> ${nom}</p>
+  <p><b>Prénom :</b> ${prenom}</p>
+  <p><b>Email :</b> ${email}</p>
+  <p><b>Téléphone :</b> ${tel}</p>
+  <p><b>Taille :</b> ${selectedSize}</p>
+  <p><b>Couleur :</b> ${selectedColor}</p>
+  <hr style="margin:15px 0;">
+  <p style="font-weight:600;color:#583e30;">
+    ✨ C’est confirmé, vous participez à l’atelier de création de parfum chez
+    <b>Nanawax La Maison</b>, on a hâte de vous voir !
+  </p>
+`;
   });
 };
 
